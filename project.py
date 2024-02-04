@@ -47,12 +47,14 @@ print(str_cell[-3:])
 def main():
 
     try:
-        s = input("Generate New Sheet / Modify Sheet\n")
+        s = input("Generate New Sheet / Modify Sheet / See Log\n")
         answer = s.lower()
         if answer == 'generate new sheet' or answer == 'gen':
             make_sheet()
         if answer == 'modify sheet' or answer == 'mod':
             mod_sheet()
+        if answer == 'see log' or answer == 'log':
+            check_log()
     except:
         s = input("Generate New Sheet / Modify Sheet")
 def make_sheet():
@@ -66,7 +68,9 @@ def make_sheet():
 def mod_sheet():
 
     try:
-        s = input('Example Entry: "ls alatreon s+ skill issue "\nMod:')
+        s = input('Example Entry: "ls alatreon s+ skill issue "\n Or, type "log" to see your log. \n Mod:')
+        if s.lower() == 'log':
+            check_log()
         s_split = s.split(' ')
         weapon = s_split[0].upper()
         monster = s_split[1].capitalize()
@@ -121,8 +125,90 @@ def mod_sheet():
 
 
     
-def func_3():
-    ...
+def check_log():
+    forest = [
+        'Nargacuga', 'Paolumu', 'Nightshade Paolumu', 'Rathalos', 'Azure Rathalos', 'Rathian',
+        'Pink Rathian', 'Tigrex', 'Brute Tigrex', 'Dodogama', 'Great Girros', 'Great Jagras',
+        'Ebony Odogaron', 'Rajang', 'Zinogre', 'Yian Garuga', 'Scarred Yian Garuga', 'Anjanath',
+        'Fulgur Anjanath', 'Banbaro', 'Brachydios', 'Savage Deviljho', 'Glavenus', 'Namielle',
+        'Ruiner Nergigante', 'Velkhana'
+    ]
+
+    wildspire = [
+        'Diablos', 'Black Diablos', 'Legiana', 'Odogaron', 'Ebony Odogaron', 'Rajang',
+        'Tobi-Kadachi', 'Viper Tobi-Kadachi', 'Kulu-Ya-Ku', 'Pukei-Pukei', 'Coral Pukei-Pukei',
+        'Yian Garuga', 'Anjanath', 'Fulgur Anjanath', 'Banbaro', 'Barroth', 'Savage Deviljho',
+        'Glavenus', 'Lunastra', 'Teostra', 'Velkhana'
+    ]
+
+    coral = [
+        'Legiana', 'Nargacuga', 'Paolumu', 'Nightshade Paolumu', 'Rathalos', 'Azure Rathalos',
+        'Tzitzi-Ya-Ku', 'Coral Pukei-Pukei', 'Namielle', 'Ruiner Nergigante', 'Velkhana'
+    ]
+
+    rotted = [
+        'Seething Bazelgeuse', 'Nargacuga', 'Rathalos', 'Azure Rathalos', 'Silver Rathalos',
+        'Paolumu', 'Nightshade Paolumu', 'Odogaron', 'Ebony Odogaron', 'Radobaan', 'Banbaro',
+        'Savage Deviljho', 'Glavenus', 'Acidic Glavenus', 'Ruiner Nergigante', 'Velkhana'
+    ]
+
+    volcanic = [
+        'Seething Bazelgeuse', 'Rathalos', 'Azure Rathalos', 'Silver Rathalos', 'Dodogama',
+        'Uragaan', 'Brachydios', 'Savage Deviljho', 'Glavenus', 'Acidic Glavenus', 'Ruiner Nergigante', 'Velkhana'
+    ]
+
+    tundra = [
+        'Barioth', 'Legiana', 'Shrieking Legiana', 'Nargacuga', 'Rathalos', 'Azure Rathalos',
+        'Silver Rathalos', 'Paolumu', 'Nightshade Paolumu', 'Tigrex', 'Brute Tigrex', 'Odogaron',
+        'Ebony Odogaron', 'Rajang', 'Zinogre', 'Stygian Zinogre', 'Kirin', 'Ruiner Nergigante',
+        'Velkhana'
+    ]
+
+    regions = {'forest': forest, 'wildspire': wildspire, 'coral': coral, 'rotted': rotted, 'volcanic': volcanic, 'tundra': tundra}
+
+    s = input("Please type your weapon of choice, followed by hunting region.\nEx: 'ls tundra'")
+    s_split = s.split(' ')
+    weapon = s_split[0].upper()
+    area = s_split[1].lower()
+
+    print(f"Weapon: {weapon}")
+    print(f"Area: {area}")
+
+    selected_region = regions.get(area, [])
+
+    weapon_cell = str(wks.find(weapon))
+    weapon_cell = weapon_cell.split(' ')
+    weapon_column = weapon_cell[1][0]
+
+    missing_log = []
+
+    for monster in selected_region:
+        monster_cell = str(wks.find(monster))
+        monster_cell = monster_cell.split(' ')
+        monster_row = monster_cell[1]
+        monster_row = monster_row[1:]
+        cell =  weapon_column + monster_row
+        test_cell = str(wks.cell((cell)))
+        # i orignally planned to put some testing in to regrex find partial spellings, but...this does that automaticly. very neat.
+
+        if test_cell[-3:] == "''>":
+            missing_log.append(monster)
+    print(missing_log)
+
+    s = input("Would you like to check another log?(y/n):")
+    if s.lower() == 'y':
+        check_log()
+    else:
+        s = input("Return to main menu? (y/n): ")
+        if s.lower() == 'y': main()
+        else: print('Happy Hunting!')
+
+
+
+
+
+
+    
 # to do: list missing monsters, list missing monsters in a GL region, dictonary of monster names / appreviates on a dictonary
 if __name__ == "__main__":
     main()
