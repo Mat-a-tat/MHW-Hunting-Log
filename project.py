@@ -7,7 +7,7 @@ from datetime import date
 #to do, setup two sheet generation; one for just ratings and the other including comments
 
 #authorization
-gc = pygsheets.authorize(service_file=r'C:\Users\mathe\project\MHW_Sheets_Rater\mhw-rating-tracker.json')
+gc = pygsheets.authorize(service_account_file=r'C:\Users\mathe\project\MHW_Sheets_Rater\mhw-rating-tracker.json')
 
 # Create empty dataframe
 df = pd.DataFrame()
