@@ -21,7 +21,7 @@ Ex: 'gen','mod','log', or 'quit'
 
 Task:
 ```
-#Generate New Sheet
+# Generate New Sheet
 *Requires to have authentication setup, and a (preferably) blank exell sheet.*
 ```
 Task: gen
@@ -31,7 +31,7 @@ Theres some values in these cells! Overwrite them? (y/n):y
 Base cells have been populated!
 Formating Updated!
 ```
-#Modify Sheet
+# Modify Sheet
 ```
 Task:mod
 Example Entry: "ls alatreon s+ example text"
@@ -46,7 +46,7 @@ Cell to be modified: M15. Continue? (y/n):y
 Cell modified: M15
 Update made!
 ```
-#Log, see
+# Log, see
 ```
 Task:log
 Please type your weapon followed by 'world' to see the log for that weapon.
