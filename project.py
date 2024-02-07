@@ -2,6 +2,7 @@ import pygsheets
 import pandas as pd
 import re
 import fnmatch
+from datetime import date
 
 #to do, setup two sheet generation; one for just ratings and the other including comments
 
@@ -38,7 +39,9 @@ monsters = [
 ]
 #to do, replace with full names
 weapons = [
-    "GS", "LS", "SNS", "DB", "HAM", "HH", "LANCE", "GL", "SA", "CB", "IG", "LBG", "HBG", "BOW"
+    "Great Sword", "Long Sword", "Sword and Shield", "Dual Blades", 
+    "Hammer", "Hunting Horn", "Lance", "Gunlance", "Switch Axe", 
+    "Charge Blade", "Insect Glaive", "Light Bowgun", "Heavy Bowgun", "Bow"
 ]
 
 
@@ -59,6 +62,12 @@ def main():
             check_log()
         if answer == 'quit' or answer == 'q' or answer == 'exit':
             quit()
+        if answer == 'test weapon':
+            weapon = input("Weapon:")
+            return(weapon_cleaner(weapon))
+        if answer == 'test monster':
+            monster = input("Monster:")
+            return(monster_cleaner(monster))
     except:
         print("Invalid. Please type a command from below, or the first letter in the command.")
         s = input(f"{opening_question}")
@@ -75,7 +84,7 @@ def make_sheet():
         s = input("Theres some values in these cells! Overwrite them? (y/n):")
         if s.lower() == 'y':
             df[' '] = monsters
-            wks.update_row(1, weapons, col_offset=0)
+            wks.update_row(1, weapons, col_offset=1)
             wks.set_dataframe(df,(1,1))
             print("Base cells have been populated!")
         else: 
@@ -97,13 +106,14 @@ def make_sheet():
 def mod_sheet():
 
     try:
-        s = input('Example Entry: "ls alatreon s+ skill issue "\nOr, type "log" to see your log. \nMod:')
+        s = input('Example Entry: "ls alatreon s+ example text"\nOr, type "log" to see your log. \nMod:')
         if s.lower() == 'log': check_log()
         s_split = s.split(' ')
-        weapon = s_split[0].upper()
-        monster = s_split[1].capitalize()
-        text = ' '.join(s_split[2:])  # Join all elements after the weapon and monster
-
+        weapon = weapon_cleaner(s_split[0])
+        monster = monster_cleaner(s_split[1])
+        text = ' '.join(s_split[2:])  
+        entry_date = str(date.today())
+        text += ' (' + entry_date + ')'
 
         print(f"Weapon: {weapon}")
         print(f"Monster: {monster}")
@@ -200,7 +210,7 @@ def check_log():
 
         coral = [
             'Legiana', 'Paolumu', 'Coral Pukei-Pukei', 'Namielle', 'Savage Deviljho','Ruiner Nergigante', 'Rajang', 'Tzitzi-Ya-Ku', 'Kirin', 'Velkhana', 'Zinogre', 
-            'Pink Rathian', 'Banbaro', 'Silver Rathalos', 'Ebony Odogaron', 'Fulgur Anjanath', 'Nargacuga', 'Odogaron'
+            'Pink Rathian', 'Banbaro', 'Silver Rathian', 'Ebony Odogaron', 'Fulgur Anjanath', 'Nargacuga', 'Odogaron'
         ]
 
         rotted = [
@@ -209,7 +219,7 @@ def check_log():
         ]
 
         volcanic = [
-            'Seething Bazelgeuse', 'Rathalos', 'Azure Rathalos', 'Silver Rathalos', 'Dodogama', 'Uragaan',
+            'Seething Bazelgeuse', 'Rathalos', 'Azure Rathalos', 'Silver Rathian', 'Dodogama', 'Uragaan',
             'Brachydios', 'Savage Deviljho', 'Glavenus', 'Acidic Glavenus','Rajang', 'Ruiner Nergigante', 'Velkhana'
         ]
 
@@ -218,17 +228,15 @@ def check_log():
             'Odogaron', 'Ebony Odogaron', 'Rajang', 'Zinogre', 'Savage Deviljho','Stygian Zinogre', 'Ruiner Nergigante', 'Velkhana'
         ]
 
-        regions = {'forest': forest, 'wildspire': wildspire, 'coral': coral, 'rotted': rotted, 'volcanic': volcanic, 'tundra': tundra, 'world':world}
-
+        regions = {'Ancient Forest': forest, 'Wildspire Waste': wildspire, 'Coral Highlands': coral, 'Rotten Vale': rotted, 'Elders Recess': volcanic, 'Hoarfrost Reach': tundra, 'world':world}
         s = input("Please type your weapon followed by 'world' to see the log for that weapon.\n Or type your weapon of choice, followed by hunting region.\nEx: 'sns world'\nEx: 'ls tundra' \nLog Request:")
         s_split = s.split(' ')
-        weapon = s_split[0].upper()
-        area = s_split[1].lower()
+        weapon = weapon_cleaner(s_split[0])
+        area = region_cleaner(s_split[1])
 
-        #to do, set this up for more than a demo. 
-        clean_weapon = weapon_cleaner(weapon)
-        print(f"Weapon: {clean_weapon}")
-        print(f"Area: {area}")
+
+        print(f"Weapon: {weapon}")
+        print(f"Area: {region_cleaner(area)}")
         if area == 'world': print("Were searching the whole world here, so please be patient as this loads.")
 
         selected_region = regions.get(area, [])
@@ -253,7 +261,7 @@ def check_log():
         
         # todo, chop last comma of and replace with a peroid. 
         if missing_log == '': print(f"Log for {weapon} complete!")
-        else: print(f"Missing Log for {weapon}: {missing_log}")
+        else: print(f"\nMissing Log for {weapon}: {missing_log}\n")
 
         main()
 
@@ -269,13 +277,16 @@ def check_log():
         '''
     except Exception as e:
         print(f"Error: {str(e)}")
-        if str(e) == 'list index out of range': print("Double check spellings and spaces of monsters in selected region.")
+        if str(e) == 'list index out of range': 
+            #to do, change this to debugg
+            print(" - - - Double check spellings of monsters in selected region - - -")
         print("Booting you back to startup")
         main()
+
 def weapon_cleaner(s):
 
-    #to do, consider using regex for this.
-    #the list are setup with the first value as the return name. Likely not best practice. 
+    #I chose to use nested loops here for my convience. dictonaries are faster, yes, but much less readable
+    #and for this scale of data? the difference is marginal. 
     ig_list = ['Insect Glaive', 'insectglaive', 'glaive', 'ig', 'insect', 'kinsect']
     ham_list = ['Hammer', 'hammer', 'ham']
     sns_list = ['Sword and Shield', 'sword', 'shield', 'sns', 'ss']
@@ -293,15 +304,79 @@ def weapon_cleaner(s):
 
     weapon_nest = [ig_list,ham_list,sns_list,gs_list, ls_list,db_list,sa_list,cb_list,hh_list,lance_list,gl_list,bow_list,hbg_list, lbg_list]
 
-    output = s
-    s = s.lower()
-    s = s.replace(' ','')
+    original = s
+    s = s.replace(' ', '').lower()
+
     for weapon_list in weapon_nest:
-        for name_var in weapon_list:
-            if name_var == s: 
-                output = weapon_list[0]
-                break
-    return output
+        for name_var in weapon_list[1:]:
+            if re.match(name_var, s):
+                return weapon_list[0]
+            
+    return original
+
+def monster_cleaner(s):
+
+    #not an exhaustive list, and there are MANY monsters in the game. inclusion is arbitray, or whichever monsters i consistnelty spell wrong
+    #g sheets has a decent change of cleaning up our responses automaticlly, but its not perfect. 
+    monster_nest = [
+        ['Rathalos', 'rathalos', 'rath'],
+        ['Rathian', 'rathian', 'ian'],
+        ['Diablos', 'diablos', 'diablo'],
+        ['Kirin', 'kirin', 'thunderhorse','unicorn'],
+        ['Nergigante', 'nergigante', 'nergi', 'nerr','nergs'],
+        ['Teostra', 'teostra', 'teo'],
+        ['Kushala Daora', 'kushala', 'kush','daora'],
+        ['Vaal Hazak', 'vaal','val', 'hazak', 'vaalhazak','havok'],
+        ['Xeno\'jiiva', 'xeno', 'jiiva'],
+        ['Zinogre', 'zinogre', 'zino', 'gre'],
+        ['Brachydios', 'brachydios', 'brachy', 'dios', 'bracky'],
+        ['Tigrex', 'tigrex', 'tig', 'rex'],
+        ['Odogaron', 'odogaron', 'odo', 'dog', 'hellpuppy'],
+        ['Legiana', 'legiana', 'leg', 'liana','legi'],
+        ['Anjanath', 'anjanath', 'anja', 'janath'],
+        ['Pukei-Pukei', 'pukei', 'puki', 'pooky'],
+        ['Barroth', 'barroth', 'bar', 'roth'],
+        ['Kulu-Ya-Ku', 'kulu', 'kulu-ya-ku', 'kuluyaku','chicken'],
+        ['Savage Deviljho', 'savagedeviljho', 'savage', 'jho','jo','pickle'],
+        ['Frostfang Barioth','frostfang','frostbarioth','fang','frost'],
+        ['Nightshade Paolumu','nightshadepaolumu','nightshade','night'],
+        ['Paolumu','paolumu','palomu'],
+        ['Seething Bazelgeuse', 'seething','bazel','goose','bomber', 'bazo'],
+        ['Raging Brachydios', 'ragingbrachydios', 'raging','raging brachy']
+    ]
+
+    original = s.capitalize()
+    s = s.replace(' ', '').lower()
+    for monster_list in monster_nest:
+        for name_var in monster_list[1:]:
+            if re.match(name_var, s):
+                return monster_list[0]
+            
+    return original
+def region_cleaner(s):
+        #the first letter tags correlate to thier guiding land regions names
+        region_nest = [
+        ['Rotten Vale', 'rotten','rotted','vale', 'rot', 'r'],
+        ['Elders Recess', 'elder', 'elders', 'recess', 'volano', 'volcanic','v'],
+        ['Hoarfrost Reach','hoarfrostreach', 'hoarfrost','reach','tundra','t'],
+        ['Ancient Forest', 'ancient', 'forest','woods','f'],
+        ['Coral Highlands', 'coralhighlands','coral','highlands', 'c' ],
+        ['Wildspire Waste','wildspirewaste','wildspire','waste','desert','w'],
+    ]
+
+        original = s.capitalize()
+        s = s.replace(' ', '').lower()
+        for region_list in region_nest:
+            for name_var in region_list[1:]:
+                if re.match(name_var, s):
+                    return region_list[0]
+        return(original)
+            
+def mhw_help():
+    #to do, list accepted names for a monsters
+    #to do, list accepted names for a weapon
+    #to do, allow user to add more names to the list off acceptbale nicknames
+    ...
 
 if __name__ == "__main__":
     main()
