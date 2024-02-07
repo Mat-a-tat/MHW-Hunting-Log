@@ -22,7 +22,7 @@ Ex: 'gen','mod','log', or 'quit'
 Task:
 ```
 ### Generate New Sheet
-*Requires to have authentication setup, and a (preferably) blank exell sheet.*
+*Requires to have authentication setup (by proxy, a JSON file loaded in the same directory) and a blank exell sheet linked to the project.*
 ```
 Task: gen
 
