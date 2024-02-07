@@ -100,13 +100,15 @@ def make_sheet():
     #to do, apply alternating colors. bit tricky to get right.
     #to do, apply additional optional conditianl colors onto cells themselves based on their rating / first few letters.
     print("Formating Updated!")
+    main()
     
 
 
 def mod_sheet():
 
     try:
-        s = input('Example Entry: "ls alatreon s+ example text"\nOr, type "log" to see your log. \nMod:')
+        #to do, bulk mod multiple monsters with 'This monster was hunted on: '
+        s = input('\nExample Entry: "ls alatreon s+ example text"\nOr, type "log" to see your log. \n\nMod:')
         if s.lower() == 'log': check_log()
         s_split = s.split(' ')
         weapon = weapon_cleaner(s_split[0])
@@ -115,7 +117,7 @@ def mod_sheet():
         entry_date = str(date.today())
         text += ' (' + entry_date + ')'
 
-        print(f"Weapon: {weapon}")
+        print(f"\nWeapon: {weapon}")
         print(f"Monster: {monster}")
         print(f"Entry: {text}")
 
@@ -229,13 +231,13 @@ def check_log():
         ]
 
         regions = {'Ancient Forest': forest, 'Wildspire Waste': wildspire, 'Coral Highlands': coral, 'Rotten Vale': rotted, 'Elders Recess': volcanic, 'Hoarfrost Reach': tundra, 'world':world}
-        s = input("Please type your weapon followed by 'world' to see the log for that weapon.\n Or type your weapon of choice, followed by hunting region.\nEx: 'sns world'\nEx: 'ls tundra' \nLog Request:")
+        s = input("\nPlease type your weapon followed by 'world' to see the log for that weapon.\n Or type your weapon of choice, followed by hunting region.\nEx: 'sns world'\nEx: 'ls tundra' \n\nLog Request:")
         s_split = s.split(' ')
         weapon = weapon_cleaner(s_split[0])
         area = region_cleaner(s_split[1])
 
 
-        print(f"Weapon: {weapon}")
+        print(f"\nWeapon: {weapon}")
         print(f"Area: {region_cleaner(area)}")
         if area == 'world': print("Were searching the whole world here, so please be patient as this loads.")
 
@@ -259,7 +261,7 @@ def check_log():
             if test_cell[-3:] == "''>":
                 missing_log += monster + ', '
         
-        # todo, chop last comma of and replace with a peroid. 
+        # todo, chop last comma of and replace with a peroid. add and. 
         if missing_log == '': print(f"Log for {weapon} complete!")
         else: print(f"\nMissing Log for {weapon}: {missing_log}\n")
 
