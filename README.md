@@ -11,6 +11,36 @@ This project, however, is still rather unwealdy. It requires the prior generatio
 1) Setup Pygsheets following thier instruction. Follow PyObtain OAuth2 credentials from Google Developers Console for google spreadsheet api and drive api and save the file as client_secret.json in same directory as project. [Detailed Explanation](https://pygsheets.readthedocs.io/en/latest/authorization.html)
 2) Run this program at the command line using
 ```
-4) python project.py
+python project.py
 ```
+From there, you will be taken to the home page:
+```
+Welcome! Please type a command below using one of the following keywords.
+Generate New Sheet / Modify Sheet / Log, open / Quit
+Ex: 'gen','mod','log', or 'quit'
 
+Task:
+```
+#Generate New Sheet
+*Requires to have authentication setup, and a (preferably) blank exell sheet.*
+```
+Task: gen
+
+Generating a new sheet can mess up an old one. Still generate a new sheet? (y/n):y
+Theres some values in these cells! Overwrite them? (y/n):y
+Base cells have been populated!
+Formating Updated!
+```
+#Modify Sheet
+```
+Task:mod
+Example Entry: "ls alatreon s+ example text"
+Or, type "log" to see your log.
+Mod:bow savage This is an example.
+Weapon: Bow
+Monster: Savage Deviljho
+Entry: This is an example. (2024-02-07)
+Cell to be modified: M15. Continue? (y/n):y
+Cell modified: M15
+Update made!
+```
