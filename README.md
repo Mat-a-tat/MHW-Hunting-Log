@@ -9,7 +9,7 @@ This project, however, is still rather unwealdy. It requires the prior generatio
 ## Usage
 
 1) Setup Pygsheets following thier instruction. Follow PyObtain OAuth2 credentials from Google Developers Console for google spreadsheet api and drive api and save the file as client_secret.json in same directory as project. [Detailed Explanation](https://pygsheets.readthedocs.io/en/latest/authorization.html)
-2) Run this program at the command line using
+2) Run this program at the command line using various commands. Each command is shown in usgae below. 
 ```
 python project.py
 ```
@@ -36,11 +36,26 @@ Formating Updated!
 Task:mod
 Example Entry: "ls alatreon s+ example text"
 Or, type "log" to see your log.
+
 Mod:bow savage This is an example.
+
 Weapon: Bow
 Monster: Savage Deviljho
 Entry: This is an example. (2024-02-07)
 Cell to be modified: M15. Continue? (y/n):y
 Cell modified: M15
 Update made!
+```
+#Log, see
+```
+Task:log
+Please type your weapon followed by 'world' to see the log for that weapon.
+ Or type your weapon of choice, followed by hunting region.
+Ex: 'sns world'
+Ex: 'ls tundra'
+Log Request:hbg coral 
+Weapon: Heavy Bowgun
+Area: Coral Highlands
+
+Missing Log for Heavy Bowgun: Legiana, Paolumu, Coral Pukei-Pukei, Namielle, Savage Deviljho, Ruiner Nergigante, Rajang, Tzitzi-Ya-Ku, Kirin, Velkhana, Zinogre, Pink Rathian, Banbaro, Silver Rathian, Ebony Odogaron, Fulgur Anjanath, Nargacuga, and Odogaron
 ```
