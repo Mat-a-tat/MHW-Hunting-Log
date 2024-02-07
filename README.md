@@ -34,6 +34,7 @@ Formating Updated!
 ### Modify Sheet
 ```
 Task:mod
+
 Example Entry: "ls alatreon s+ example text"
 Or, type "log" to see your log.
 
@@ -49,6 +50,7 @@ Update made!
 ### Log, see
 ```
 Task:log
+
 Please type your weapon followed by 'world' to see the log for that weapon.
  Or type your weapon of choice, followed by hunting region.
 Ex: 'sns world'
