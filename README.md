@@ -70,4 +70,5 @@ Now, why sheets specificly? Because I don't own google office, and have no inten
 
 The biggest realization I had while working on this project, was how easy it was to continue to add features and robustness once a core program was properly established. Giving users the ability to use nicknames and shortened versions of different things to look them up? Easy. Adding a timestamp to every entry? Two lines of code. This is a rookie realization; that the modular nature of coding a program, when does correctly, allows for customization and upgrading to be done blazingly fast. I thoughly enjoyed this project, and want to thank all the people at CS50 for putting together their course. Its free! Go check it out! The bot checker is the most singularly rude piece of software I will ever work with, but it has helped me become the medicore coder I am now.
 
-Thanks for reading <3 
+*Thanks for reading <3*
+*Mathew V.*
