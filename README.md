@@ -9,8 +9,8 @@ As this project uses Google Sheets, it requires the prior generation and autheni
 ## Usage
 
 1) Setup Pygsheets following thier instruction. Follow PyObtain OAuth2 credentials from Google Developers Console for google spreadsheet api and drive api and save the file as client_secret.json in same directory as project. [Detailed Explanation](https://pygsheets.readthedocs.io/en/latest/authorization.html)
-1.1) **Highly reccomended** to include .json files in the git-ignore to prevent OAuth creditials from being leaked, should you use Pygsheets on a project on Github. 
-2) Run this program at the command line using various commands. Each command is shown in usage below. 
+2) **Highly reccomended** to include .json files in the git-ignore to prevent OAuth creditials from being leaked, should you use Pygsheets on a project on Github. 
+3) Run this program at the command line using various commands. Each command is shown in usage below. 
 ```
 python project.py
 ```
