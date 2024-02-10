@@ -1,7 +1,6 @@
 import pygsheets
 import pandas as pd
 import re
-import fnmatch
 from datetime import date
 
 #to do, setup two sheet generation; one for just ratings and the other including comments
@@ -13,7 +12,7 @@ gc = pygsheets.authorize(service_account_file=r'C:\Users\mathe\project\MHW_Sheet
 df = pd.DataFrame()
 
 #open the google spreadsheet (where 'PY to Gsheet Test' is the name of my sheet)
-sh = gc.open('MHW Ratings Export')
+sh = gc.open('MHW Hunting Log')
 
 #select the first sheet 
 wks = sh[0]
@@ -43,6 +42,7 @@ weapons = [
     "Hammer", "Hunting Horn", "Lance", "Gunlance", "Switch Axe", 
     "Charge Blade", "Insect Glaive", "Light Bowgun", "Heavy Bowgun", "Bow"
 ]
+current_log = []
 
 
 def main():
@@ -146,7 +146,7 @@ def mod_sheet():
         # Update the cell in the worksheet
         check = input(f'Cell to be modified: {cell}. Continue? (y/n):')
     
-        if len(text) > 0 and check.lower != 'n':
+        if len(text) > 0 and check.lower() != 'n':
             wks.update_value(cell,text)
             print(f'Cell modified: {cell}')
             print("Update made!")
@@ -184,8 +184,8 @@ def check_log():
             "Namielle", "Nargacuga", "Ruiner Nergigante", "Odogaron",
             "Ebony Odogaron", "Paolumu", "Nightshade Paolumu", 
             "Pukei-Pukei", "Coral Pukei-Pukei", "Radobaan", "Rajang",
-            "Furious Rajang", "Rathalos", "Azure Rathalos", "Gold Rathalos",
-            "Rathian", "Pink Rathian", "Silver Rathian", "Safi'jiiva",
+            "Furious Rajang", "Rathalos", "Azure Rathalos", "Silver Rathalos",
+            "Rathian", "Pink Rathian", "Gold Rathian", "Safi'jiiva",
             "Shara Ishvalda", "Teostra", "Tigrex", "Brute Tigrex",
             "Tobi-Kadachi", "Viper Tobi-Kadachi", "Tzitzi-Ya-Ku", "Uragaan",
             "Blackveil Vaal Hazak", "Velkhana", "Yian Garuga", "Scarred Yian Garuga",
@@ -212,7 +212,7 @@ def check_log():
 
         coral = [
             'Legiana', 'Paolumu', 'Coral Pukei-Pukei', 'Namielle', 'Savage Deviljho','Ruiner Nergigante', 'Rajang', 'Tzitzi-Ya-Ku', 'Kirin', 'Velkhana', 'Zinogre', 
-            'Pink Rathian', 'Banbaro', 'Silver Rathian', 'Ebony Odogaron', 'Fulgur Anjanath', 'Nargacuga', 'Odogaron'
+            'Pink Rathian', 'Banbaro', 'Silver Rathalos', 'Ebony Odogaron', 'Fulgur Anjanath', 'Nargacuga', 'Odogaron'
         ]
 
         rotted = [
@@ -221,16 +221,17 @@ def check_log():
         ]
 
         volcanic = [
-            'Seething Bazelgeuse', 'Rathalos', 'Azure Rathalos', 'Silver Rathian', 'Dodogama', 'Uragaan',
-            'Brachydios', 'Savage Deviljho', 'Glavenus', 'Acidic Glavenus','Rajang', 'Ruiner Nergigante', 'Velkhana'
+            'Seething Bazelgeuse', 'Rathalos', 'Azure Rathalos', 'Silver Rathalos', 'Gold Rathian','Tigrex', 'Dodogama', 'Uragaan',
+            'Brachydios', 'Savage Deviljho', 'Glavenus', 'Rajang', 'Ruiner Nergigante', 'Velkhana', 'Lavasioth',
+            'Ebony Odogaron','Fulgur Anjanath', 'Kushala Daora', 'Lunastra', 'Teostra'
         ]
 
         tundra = [
-            'Barioth', 'Shrieking Legiana', 'Nargacuga', 'Tigrex', 'Brute Tigrex', 'Paolumu', 'Nightshade Paolumu',
+            'Barioth', 'Shrieking Legiana', 'Tigrex', 'Paolumu', 'Nightshade Paolumu', 'Legiana',
             'Odogaron', 'Ebony Odogaron', 'Rajang', 'Zinogre', 'Savage Deviljho','Stygian Zinogre', 'Ruiner Nergigante', 'Velkhana'
         ]
 
-        regions = {'Ancient Forest': forest, 'Wildspire Waste': wildspire, 'Coral Highlands': coral, 'Rotten Vale': rotted, 'Elders Recess': volcanic, 'Hoarfrost Reach': tundra, 'world':world}
+        regions = {'Ancient Forest': forest, 'Wildspire Waste': wildspire, 'Coral Highlands': coral, 'Rotten Vale': rotted, 'Elders Recess': volcanic, 'Hoarfrost Reach': tundra, 'World':world}
         s = input("\nPlease type your weapon followed by 'world' to see the log for that weapon.\n Or type your weapon of choice, followed by hunting region.\nEx: 'sns world'\nEx: 'ls tundra' \n\nLog Request:")
         s_split = s.split(' ')
         weapon = weapon_cleaner(s_split[0])
@@ -262,6 +263,8 @@ def check_log():
                 missing_log += monster + ', '
         
         # todo, chop last comma of and replace with a peroid. add and. 
+        
+        #to do, share current_log between functions to show wheneever you mod a weapon
         if missing_log == '': print(f"Log for {weapon} complete!")
         else: print(f"\nMissing Log for {weapon}: {missing_log}\n")
 
@@ -336,7 +339,8 @@ def monster_cleaner(s):
         ['Odogaron', 'odogaron', 'odo', 'dog', 'hellpuppy'],
         ['Legiana', 'legiana', 'leg', 'liana','legi'],
         ['Anjanath', 'anjanath', 'anja', 'janath'],
-        ['Pukei-Pukei', 'pukei', 'puki', 'pooky'],
+        ['Pukei-Pukei', 'pukei', 'puki', 'pooky','pookie'],
+        ['Coral Pukei-Pukei','coral'],
         ['Barroth', 'barroth', 'bar', 'roth'],
         ['Kulu-Ya-Ku', 'kulu', 'kulu-ya-ku', 'kuluyaku','chicken'],
         ['Savage Deviljho', 'savagedeviljho', 'savage', 'jho','jo','pickle'],
@@ -363,7 +367,8 @@ def region_cleaner(s):
         ['Hoarfrost Reach','hoarfrostreach', 'hoarfrost','reach','tundra','t'],
         ['Ancient Forest', 'ancient', 'forest','woods','f'],
         ['Coral Highlands', 'coralhighlands','coral','highlands', 'c' ],
-        ['Wildspire Waste','wildspirewaste','wildspire','waste','desert','w'],
+        ['Wildspire Waste','wildspirewaste','wildspire','waste','desert','wild'],
+        ['World','world','all','everywhere',],
     ]
 
         original = s.capitalize()
