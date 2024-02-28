@@ -6,7 +6,7 @@ from datetime import date
 #to do, setup two sheet generation; one for just ratings and the other including comments
 
 #authorization
-gc = pygsheets.authorize(service_account_file=r'C:\Users\mathe\project\MHW_Sheets_Rater\mhw-rating-tracker.json')
+gc = pygsheets.authorize(service_account_file=r'C:\Users\mathe\project\mhw-rating-tracker.json')
 
 # Create empty dataframe
 df = pd.DataFrame()
@@ -169,100 +169,18 @@ def mod_sheet():
     
 def check_log():
     try:
-        # to do, allow searching via monster 
-
-        #list index out of range errors are likely 
-        world = [
-            "Alatreon", "Ancient Leshen", "Anjanath", "Fulgur Anjanath",
-            "Banbaro", "Barioth", "Frostfang Barioth", "Barroth",
-            "Seething Bazelgeuse", "Behemoth", "Beotodus", "Brachydios",
-            "Raging Brachydios", "Savage Deviljho", "Diablos", "Black Diablos",
-            "Dodogama", "Fatalis", "Glavenus", "Acidic Glavenus",
-            "Great Girros", "Great Jagras", "Jyuratodus", "Kirin",
-            "Kulu-Ya-Ku", "Kulve Taroth", "Kushala Daora", "Lavasioth",
-            "Legiana", "Shrieking Legiana", "Leshen", "Lunastra",
-            "Namielle", "Nargacuga", "Ruiner Nergigante", "Odogaron",
-            "Ebony Odogaron", "Paolumu", "Nightshade Paolumu", 
-            "Pukei-Pukei", "Coral Pukei-Pukei", "Radobaan", "Rajang",
-            "Furious Rajang", "Rathalos", "Azure Rathalos", "Silver Rathalos",
-            "Rathian", "Pink Rathian", "Gold Rathian", "Safi'jiiva",
-            "Shara Ishvalda", "Teostra", "Tigrex", "Brute Tigrex",
-            "Tobi-Kadachi", "Viper Tobi-Kadachi", "Tzitzi-Ya-Ku", "Uragaan",
-            "Blackveil Vaal Hazak", "Velkhana", "Yian Garuga", "Scarred Yian Garuga",
-            "Zinogre", "Stygian Zinogre"
-        ]
-        #having world like this is kind of hacky. I dont like having this list poping up in two places.
-        #However, easier and more consistent than loops and text cleaning below. (this is copoium) 
-        invaders = [
-            'Savage Deviljho', 'Ruiner Nergigante','Rajang', 'Banbaro', 'Fulgur Anjanath', 'Ebony Odogaren',
-        ]
-        #invaders currenty does nothing, but might be useful later.
-        forest = [
-            'Nargacuga', 'Nightshade Paolumu', 'Rathalos', 'Azure Rathalos', 'Rathian', 'Great Jagras',
-            'Tigrex', 'Anjanath', 'Fulgur Anjanath', 'Yian Garuga', 'Scarred Yian Garuga', 'Pukei-Pukei',
-            'Banbaro', 'Brachydios', 'Savage Deviljho', 'Glavenus', 'Ruiner Nergigante', 'Kushala Daora',
-            'Velkhana'
-        ]
-
-        wildspire = [
-            'Diablos', 'Black Diablos', 'Odogaron', 'Ebony Odogaron', 'Rajang', 'Tobi-Kadachi',
-            'Viper Tobi-Kadachi', 'Kulu-Ya-Ku', 'Pink Rathian', 'Pukei-Pukei', 'Banbaro', 'Great Jagras',
-            'Anjanath', 'Fulgur Anjanath', 'Savage Deviljho', 'Lunastra', 'Teostra', 'Glavenus', 'Ruiner Nergigante', 'Velkhana'
-        ]
-
-        coral = [
-            'Legiana', 'Paolumu', 'Coral Pukei-Pukei', 'Namielle', 'Savage Deviljho','Ruiner Nergigante', 'Rajang', 'Tzitzi-Ya-Ku', 'Kirin', 'Velkhana', 'Zinogre', 
-            'Pink Rathian', 'Banbaro', 'Silver Rathalos', 'Ebony Odogaron', 'Fulgur Anjanath', 'Nargacuga', 'Odogaron'
-        ]
-
-        rotted = [
-            'Brute Tigrex', 'Ebony Odogaron', 'Radobaan','Rajang', 'Savage Deviljho', 'Acidic Glavenus',
-            'Ruiner Nergigante', 'Blackveil Vaal Hazak', 'Velkhana'
-        ]
-
-        volcanic = [
-            'Seething Bazelgeuse', 'Rathalos', 'Azure Rathalos', 'Silver Rathalos', 'Gold Rathian','Tigrex', 'Dodogama', 'Uragaan',
-            'Brachydios', 'Savage Deviljho', 'Glavenus', 'Rajang', 'Ruiner Nergigante', 'Velkhana', 'Lavasioth',
-            'Ebony Odogaron','Fulgur Anjanath', 'Kushala Daora', 'Lunastra', 'Teostra'
-        ]
-
-        tundra = [
-            'Barioth', 'Shrieking Legiana', 'Tigrex', 'Paolumu', 'Nightshade Paolumu', 'Legiana',
-            'Odogaron', 'Ebony Odogaron', 'Rajang', 'Zinogre', 'Savage Deviljho','Stygian Zinogre', 'Ruiner Nergigante', 'Velkhana'
-        ]
-
-        regions = {'Ancient Forest': forest, 'Wildspire Waste': wildspire, 'Coral Highlands': coral, 'Rotten Vale': rotted, 'Elders Recess': volcanic, 'Hoarfrost Reach': tundra, 'World':world}
         s = input("\nPlease type your weapon followed by 'world' to see the log for that weapon.\n Or type your weapon of choice, followed by hunting region.\nEx: 'sns world'\nEx: 'ls tundra' \n\nLog Request:")
         s_split = s.split(' ')
         weapon = weapon_cleaner(s_split[0])
-        area = region_cleaner(s_split[1])
-
-
-        print(f"\nWeapon: {weapon}")
-        print(f"Area: {region_cleaner(area)}")
-        if area == 'world': print("Were searching the whole world here, so please be patient as this loads.")
-
-        selected_region = regions.get(area, [])
-
-        weapon_cell = str(wks.find(weapon))
-        weapon_cell = weapon_cell.split(' ')
-        weapon_column = weapon_cell[1][0]
-
+        target_log = s_split[1]
         missing_log = ''
 
-        for monster in selected_region:
-            monster_cell = str(wks.find(monster))
-            monster_cell = monster_cell.split(' ')
-            monster_row = monster_cell[1]
-            monster_row = monster_row[1:]
-            cell =  weapon_column + monster_row
-            test_cell = str(wks.cell((cell)))
-
-
-            if test_cell[-3:] == "''>":
-                missing_log += monster + ', '
-        
-        # todo, chop last comma of and replace with a peroid. add and. 
+        if target_log == 'fire' or target_log == 'water':
+            element = target_log
+            missing_log = element_log(weapon, element)
+        else:
+            area = region_cleaner(s_split[1])
+            missing_log = region_log(weapon, area)
         
         #to do, share current_log between functions to show wheneever you mod a weapon
         if missing_log == '': print(f"Log for {weapon} complete!")
@@ -348,7 +266,9 @@ def monster_cleaner(s):
         ['Nightshade Paolumu','nightshadepaolumu','nightshade','night'],
         ['Paolumu','paolumu','palomu'],
         ['Seething Bazelgeuse', 'seething','bazel','goose','bomber', 'bazo'],
-        ['Raging Brachydios', 'ragingbrachydios', 'raging','raging brachy']
+        ['Raging Brachydios', 'ragingbrachydios', 'raging','raging brachy'],
+        ["Glavenus", 'glavenus','glave'],
+        ["Acidic Glavenus", 'acidicglavenus','acidicglave','acidic','acid']
     ]
 
     original = s.capitalize()
@@ -379,11 +299,170 @@ def region_cleaner(s):
                     return region_list[0]
         return(original)
             
+def region_log(weapon, area):
+    
+    world = [
+        "Alatreon", "Ancient Leshen", "Anjanath", "Fulgur Anjanath",
+        "Banbaro", "Barioth", "Frostfang Barioth", "Barroth",
+        "Seething Bazelgeuse", "Behemoth", "Beotodus", "Brachydios",
+        "Raging Brachydios", "Savage Deviljho", "Diablos", "Black Diablos",
+        "Dodogama", "Fatalis", "Glavenus", "Acidic Glavenus",
+        "Great Girros", "Great Jagras", "Jyuratodus", "Kirin",
+        "Kulu-Ya-Ku", "Kulve Taroth", "Kushala Daora", "Lavasioth",
+        "Legiana", "Shrieking Legiana", "Leshen", "Lunastra",
+        "Namielle", "Nargacuga", "Ruiner Nergigante", "Odogaron",
+        "Ebony Odogaron", "Paolumu", "Nightshade Paolumu", 
+        "Pukei-Pukei", "Coral Pukei-Pukei", "Radobaan", "Rajang",
+        "Furious Rajang", "Rathalos", "Azure Rathalos", "Silver Rathalos",
+        "Rathian", "Pink Rathian", "Gold Rathian", "Safi'jiiva",
+        "Shara Ishvalda", "Teostra", "Tigrex", "Brute Tigrex",
+        "Tobi-Kadachi", "Viper Tobi-Kadachi", "Tzitzi-Ya-Ku", "Uragaan",
+        "Blackveil Vaal Hazak", "Velkhana", "Yian Garuga", "Scarred Yian Garuga",
+        "Zinogre", "Stygian Zinogre"
+    ]
+    #having world like this is kind of hacky. I dont like having this list poping up in two places.
+    #However, easier and more consistent than loops and text cleaning below. (this is copoium) 
+    invaders = [
+        'Savage Deviljho', 'Ruiner Nergigante','Rajang', 'Banbaro', 'Fulgur Anjanath', 'Ebony Odogaren',
+    ]
+    #invaders currenty does nothing, but might be useful later.
+    forest = [
+        'Nargacuga', 'Nightshade Paolumu', 'Rathalos', 'Azure Rathalos', 'Rathian', 'Great Jagras',
+        'Tigrex', 'Anjanath', 'Fulgur Anjanath', 'Yian Garuga', 'Scarred Yian Garuga', 'Pukei-Pukei',
+        'Banbaro', 'Brachydios', 'Savage Deviljho', 'Glavenus', 'Ruiner Nergigante', 'Kushala Daora',
+        'Velkhana'
+    ]
+
+    wildspire = [
+        'Diablos', 'Black Diablos', 'Ebony Odogaron', 'Rajang', 'Tobi-Kadachi', 'Nightshade Paolumu', 'Barroth',
+        'Kulu-Ya-Ku', 'Pink Rathian', 'Pukei-Pukei', 'Banbaro', 'Pink Rathian',
+        'Anjanath', 'Fulgur Anjanath', 'Savage Deviljho', 'Lunastra', 'Teostra', 'Glavenus', 'Ruiner Nergigante', 'Velkhana'
+    ]
+
+    coral = [
+        'Legiana', 'Paolumu', 'Coral Pukei-Pukei', 'Namielle', 'Savage Deviljho','Ruiner Nergigante', 'Rajang', 'Tzitzi-Ya-Ku', 'Kirin', 'Velkhana', 'Zinogre', 
+        'Pink Rathian', 'Banbaro', 'Silver Rathalos', 'Ebony Odogaron', 'Fulgur Anjanath', 'Nargacuga', 'Odogaron'
+    ]
+
+    rotted = [
+        'Brute Tigrex', 'Ebony Odogaron', 'Radobaan','Rajang', 'Savage Deviljho', 'Acidic Glavenus',
+        'Ruiner Nergigante', 'Blackveil Vaal Hazak', 'Velkhana'
+    ]
+
+    volcanic = [
+        'Seething Bazelgeuse', 'Rathalos', 'Azure Rathalos', 'Silver Rathalos', 'Gold Rathian','Tigrex', 'Dodogama', 'Uragaan',
+        'Brachydios', 'Savage Deviljho', 'Glavenus', 'Rajang', 'Ruiner Nergigante', 'Velkhana', 'Lavasioth',
+        'Ebony Odogaron','Fulgur Anjanath', 'Kushala Daora', 'Lunastra', 'Teostra'
+    ]
+
+    tundra = [
+        'Barioth', 'Shrieking Legiana', 'Tigrex', 'Paolumu', 'Nightshade Paolumu', 'Legiana',
+        'Odogaron', 'Ebony Odogaron', 'Rajang', 'Zinogre', 'Savage Deviljho','Stygian Zinogre', 'Ruiner Nergigante', 'Velkhana'
+    ]
+    regions = {'Ancient Forest': forest, 'Wildspire Waste': wildspire, 'Coral Highlands': coral, 'Rotten Vale': rotted, 'Elders Recess': volcanic, 'Hoarfrost Reach': tundra, 'World':world}
+
+    print(f"\nWeapon: {weapon}")
+    print(f"Area: {region_cleaner(area)}")
+    if area == 'world': print("Were searching the whole world here, so please be patient as this loads.")
+
+    selected_region = regions.get(area, [])
+
+    weapon_cell = str(wks.find(weapon))
+    weapon_cell = weapon_cell.split(' ')
+    weapon_column = weapon_cell[1][0]
+
+    missing_log = ''
+
+    for monster in selected_region:
+        monster_cell = str(wks.find(monster))
+        monster_cell = monster_cell.split(' ')
+        monster_row = monster_cell[1]
+        monster_row = monster_row[1:]
+        cell =  weapon_column + monster_row
+        test_cell = str(wks.cell((cell)))
+
+
+        if test_cell[-3:] == "''>":
+            missing_log += monster + ', '
+
+    return missing_log
+
+
+
+def element_cleaner(element):
+    return(element)
+
+
 def mhw_help():
     #to do, list accepted names for a monsters
     #to do, list accepted names for a weapon
     #to do, allow user to add more names to the list off acceptbale nicknames
     ...
+
+
+def element_log(weapon,element):
+    print(f"\nWeapon: {weapon}")
+    print(f"Area: {element}")
+
+    water = [
+        "Anjanath",
+        "Kulu-Ya-Ku",
+        "Great Girros",
+        "Teostra",
+        "Zorah Magdaros",
+        "Uragaan",
+        "Tobi-Kadachi",
+        "Lavasioth",
+        "Glavenus",
+        "Ebony Odogaron",
+        "Nightshade Paolumu",
+        "Yian Garuga",
+        "Scarred Yian Garuga",
+        "Silver Rathalos",
+        "Brute Tigrex"
+    ]
+    fire = [
+        "Great Jagras",
+        "Paolumu",
+        "Legiana",
+        "Kirin",
+        "Vaal Hazak",
+        "Leshen",
+        "Ancient Leshen",
+        "Beotodus",
+        "Velkhana",
+        "Shrieking Legiana",
+        "Barioth",
+        "Acidic Glavenus",
+        "Namielle",
+        "Alatreon",
+        "Frostfang Barioth"
+    ]
+    regions = {'Fire Weakness': fire, 'Water Weakness': water}
+
+    print(f"\nWeapon: {weapon}")
+    print(f"Element: {element_cleaner(element)}")
+
+    selected_region = regions.get(area, [])
+
+    weapon_cell = str(wks.find(weapon))
+    weapon_cell = weapon_cell.split(' ')
+    weapon_column = weapon_cell[1][0]
+
+    missing_log = ''
+
+    for monster in selected_region:
+        monster_cell = str(wks.find(monster))
+        monster_cell = monster_cell.split(' ')
+        monster_row = monster_cell[1]
+        monster_row = monster_row[1:]
+        cell =  weapon_column + monster_row
+        test_cell = str(wks.cell((cell)))
+
+
+        if test_cell[-3:] == "''>":
+            missing_log += monster + ', '
+    return missing_log
 
 if __name__ == "__main__":
     main()
