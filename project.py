@@ -44,7 +44,6 @@ weapons = [
 ]
 current_log = []
 
-
 def main():
 
     try:
@@ -102,8 +101,6 @@ def make_sheet():
     print("Formating Updated!")
     main()
     
-
-
 def mod_sheet():
 
     try:
@@ -165,8 +162,6 @@ def mod_sheet():
         print("Booting you back to startup")
         main()
 
-
-    
 def check_log():
     try:
         s = input("\nPlease type your weapon followed by 'world' to see the log for that weapon.\n Or type your weapon of choice, followed by hunting region.\nEx: 'sns world'\nEx: 'ls tundra' \n\nLog Request:")
@@ -175,15 +170,17 @@ def check_log():
         target_log = s_split[1]
         missing_log = ''
 
-        if target_log == 'fire' or target_log == 'water':
-            element = target_log
+        element = element_cleaner(target_log)
+        if element != False:
+            target_log = element
             missing_log = element_log(weapon, element)
         else:
             area = region_cleaner(s_split[1])
+            target_log = area
             missing_log = region_log(weapon, area)
         
         #to do, share current_log between functions to show wheneever you mod a weapon
-        if missing_log == '': print(f"Log for {weapon} complete!")
+        if missing_log == '': print(f"Log for {weapon} and {target_log} complete!")
         else: print(f"\nMissing Log for {weapon}: {missing_log}\n")
 
         main()
@@ -238,7 +235,6 @@ def weapon_cleaner(s):
     return original
 
 def monster_cleaner(s):
-
     #not an exhaustive list, and there are MANY monsters in the game. inclusion is arbitray, or whichever monsters i consistnelty spell wrong
     #g sheets has a decent change of cleaning up our responses automaticlly, but its not perfect. 
     monster_nest = [
@@ -279,7 +275,9 @@ def monster_cleaner(s):
                 return monster_list[0]
             
     return original
+
 def region_cleaner(s):
+        
         #the first letter tags correlate to thier guiding land regions names
         region_nest = [
         ['Rotten Vale', 'rotten','rotted','vale', 'rot', 'r'],
@@ -297,9 +295,9 @@ def region_cleaner(s):
             for name_var in region_list[1:]:
                 if re.match(name_var, s):
                     return region_list[0]
-        return(original)
-            
+        return(original) 
 def region_log(weapon, area):
+
     
     world = [
         "Alatreon", "Ancient Leshen", "Anjanath", "Fulgur Anjanath",
@@ -381,17 +379,25 @@ def region_log(weapon, area):
         cell =  weapon_column + monster_row
         test_cell = str(wks.cell((cell)))
 
-
         if test_cell[-3:] == "''>":
             missing_log += monster + ', '
 
     return missing_log
 
-
-
-def element_cleaner(element):
-    return(element)
-
+def element_cleaner(s):
+        element_nest = [
+        ['Fire Weakness', 'fire',],
+        ['Ice Weakness', 'ice', 'cold',],
+        ['Water Weakness','water', 'wat',],
+        ['Thunder Weakness', 'thunder', 'lightning','thun','light'],
+        ['Dragon Weakness', 'dragon','drag'],
+        ]
+        s = s.replace(' ', '').lower()
+        for element_list in element_nest:
+            for name_var in element_list[1:]:
+                if re.match(name_var, s):
+                    return element_list[0]
+        return(False) 
 
 def mhw_help():
     #to do, list accepted names for a monsters
@@ -399,51 +405,50 @@ def mhw_help():
     #to do, allow user to add more names to the list off acceptbale nicknames
     ...
 
-
 def element_log(weapon,element):
-    print(f"\nWeapon: {weapon}")
-    print(f"Area: {element}")
-
     water = [
-        "Anjanath",
-        "Kulu-Ya-Ku",
-        "Great Girros",
-        "Teostra",
-        "Zorah Magdaros",
-        "Uragaan",
-        "Tobi-Kadachi",
-        "Lavasioth",
-        "Glavenus",
-        "Ebony Odogaron",
-        "Nightshade Paolumu",
-        "Yian Garuga",
-        "Scarred Yian Garuga",
-        "Silver Rathalos",
-        "Brute Tigrex"
+        "Anjanath", "Kulu-Ya-Ku", "Great Girros",
+        "Teostra", "Zorah Magdaros","Uragaan",
+        "Tobi-Kadachi", "Lavasioth", "Glavenus",
+        "Ebony Odogaron", "Nightshade Paolumu", "Yian Garuga",
+        "Scarred Yian Garuga", "Silver Rathalos", "Brute Tigrex"
     ]
     fire = [
-        "Great Jagras",
-        "Paolumu",
-        "Legiana",
-        "Kirin",
-        "Vaal Hazak",
-        "Leshen",
-        "Ancient Leshen",
-        "Beotodus",
-        "Velkhana",
-        "Shrieking Legiana",
-        "Barioth",
-        "Acidic Glavenus",
-        "Namielle",
-        "Alatreon",
-        "Frostfang Barioth"
+        "Great Jagras", "Paolumu", "Legiana",
+        "Kirin", "Vaal Hazak", "Leshen",
+        "Ancient Leshen", "Beotodus", "Velkhana",
+        "Shrieking Legiana", "Barioth", "Acidic Glavenus",
+        "Namielle", "Alatreon", "Frostfang Barioth"
     ]
-    regions = {'Fire Weakness': fire, 'Water Weakness': water}
+    lightning = [
+        "Tzitzi-Ya-Ku", "Pukei-Pukei", "Bazelgeuse",
+        "Jyuratodus", "Legiana", "Nergigante",
+        "Dodogama", "Kushala Daora", "Deviljho",
+        "Viper Tobi-Kadachi", "Nargacuga", "Tigrex",
+        "Savage Deviljho", "Gold Rathian"
+    ]
+    ice = [
+        "Diablos", "Odogaron", "Tzitzi-Ya-Ku",
+        "Black Diablos", "Teostra", "Lunastra",
+        "Coral Pukei-Pukei","Brachydios",
+        "Fulgur Anjanath", "Seething Bazelgeuse",
+        "Shara Ishvalda", "Zinogre", "Rajang",
+        "Raging Brachydios", "Furious Rajang", "Alatreon"
+    ]
+    dragon = [
+        "Rathian", "Rathalos", "Radobaan",
+        "Pink Rathian", "Azure Rathalos",
+        "Vaal Hazak", "Deviljho", "Banbaro",
+        "Savage Deviljho", "Ruiner Nergigante"
+    ]
+
+    elements = {'Fire Weakness': fire, 'Water Weakness': water, 'Lightning Weakness':lightning, 'Ice Weakness':ice, 'Dragon Weakness':dragon}
+    #to do, figure out how to add ' weakness' later, instead of listing here
 
     print(f"\nWeapon: {weapon}")
     print(f"Element: {element_cleaner(element)}")
 
-    selected_region = regions.get(area, [])
+    selected_element = elements.get(element, [])
 
     weapon_cell = str(wks.find(weapon))
     weapon_cell = weapon_cell.split(' ')
@@ -451,14 +456,13 @@ def element_log(weapon,element):
 
     missing_log = ''
 
-    for monster in selected_region:
+    for monster in selected_element:
         monster_cell = str(wks.find(monster))
         monster_cell = monster_cell.split(' ')
         monster_row = monster_cell[1]
         monster_row = monster_row[1:]
         cell =  weapon_column + monster_row
         test_cell = str(wks.cell((cell)))
-
 
         if test_cell[-3:] == "''>":
             missing_log += monster + ', '
