@@ -169,12 +169,21 @@ def check_log():
         weapon = weapon_cleaner(s_split[0])
         target_log = s_split[1]
         missing_log = ''
+        empty_log = True
 
         element = element_cleaner(target_log)
         if element != False:
             target_log = element
+            empty_log = False
             missing_log = element_log(weapon, element)
-        else:
+
+        species = species_cleaner(target_log)
+        if species != False:
+            target_log = species
+            empty_log = False
+            missing_log = species_log(weapon, species)
+
+        if empty_log:
             area = region_cleaner(s_split[1])
             target_log = area
             missing_log = region_log(weapon, area)
@@ -279,9 +288,10 @@ def monster_cleaner(s):
 def region_cleaner(s):
         
         #the first letter tags correlate to thier guiding land regions names
+        #note: elders does not use elder. this is because elder is needed for the species, and dragon for the element. 
         region_nest = [
         ['Rotten Vale', 'rotten','rotted','vale', 'rot', 'r'],
-        ['Elders Recess', 'elder', 'elders', 'recess', 'volano', 'volcanic','v'],
+        ['Elders Recess', 'recess', 'volano', 'volcanic','v'],
         ['Hoarfrost Reach','hoarfrostreach', 'hoarfrost','reach','tundra','t'],
         ['Ancient Forest', 'ancient', 'forest','woods','f'],
         ['Coral Highlands', 'coralhighlands','coral','highlands', 'c' ],
@@ -399,6 +409,87 @@ def element_cleaner(s):
                     return element_list[0]
         return(False) 
 
+def species_cleaner(s):
+        species_nest = [
+        ['Bird Wyverns', 'bird','burb'],
+        ['Brute Wyverns', 'brute','brut'],
+        ['Elder Dragons','elder dragons', 'elder'],
+        ['Fanged Wyverns', 'fanged', 'fang'],
+        ['Flying Wyverns', 'flying', 'fly'],
+        ['Piscine Wyvern', 'piscine', 'pisc', 'fish']
+        ]
+        s = s.replace(' ', '').lower()
+        for species_list in species_nest:
+            for name_var in species_list[1:]:
+                if re.match(name_var, s):
+                    return species_list[0]
+        return(False) 
+
+def species_log(weapon,species):
+    bird = [
+        "Kulu-Ya-Ku", "Pukei-Pukei", "Tzitzi-Ya-Ku",
+        "Coral Pukei-Pukei", "Yian Garuga", "Scarred Yian Garuga"
+    ]
+    brute = [
+        "Anjanath", "Barroth",
+        "Radobaan", "Uragaan", "Fulgur Anjanath",
+        "Banbaro", "Brachydios", "Raging Brachydios",
+        "Savage Deviljho", "Glavenus", "Acidic Glavenus"
+    ]
+    elder = [
+        "Behemoth", "Kirin", "Kulve Taroth",
+        "Kushala Daora", "Lunastra",
+        "Teostra", "Alatreon", "Namielle",
+        "Ruiner Nergigante", "Safi'jiiva", "Shara Ishvalda",
+        "Blackveil Vaal Hazak", "Velkhana", "Fatalis"
+    ]
+    fanged = [
+        "Dodogama", "Great Girros", "Great Jagras",
+        "Odogaron", "Tobi-Kadachi", "Ebony Odogaron",
+        "Viper Tobi-Kadachi", "Zinogre", "Stygian Zinogre"
+    ]
+    flying = [
+        "Diablos", "Black Diablos",
+        "Legiana", "Paolumu", "Rathalos",
+        "Azure Rathalos", "Rathian", "Pink Rathian",
+        "Barioth", "Seething Bazelgeuse", "Shrieking Legiana",
+        "Nargacuga", "Nightshade Paolumu", "Silver Rathalos",
+        "Gold Rathian", "Tigrex", "Brute Tigrex",
+        "Frostfang Barioth"
+    ]
+    piscine = [
+        "Jyuratodus", "Lavasioth", "Beotodus"
+    ]
+
+    species_dict = {'Bird Wyverns': bird, 'Brute Wyverns': brute,
+                'Elder Dragons': elder, 'Fanged Wyverns': fanged,
+                'Flying Wyverns': flying, 'Piscine Wyvern': piscine,
+                }
+
+    #to do, figure out how to add ' weakness' later, instead of listing here
+    print(f"\nWeapon: {weapon}")
+    print(f"Species: {species_cleaner(species)}")
+
+    selected_species = species_dict.get(species, [])
+
+    weapon_cell = str(wks.find(weapon))
+    weapon_cell = weapon_cell.split(' ')
+    weapon_column = weapon_cell[1][0]
+
+    missing_log = ''
+
+    for monster in selected_species:
+        monster_cell = str(wks.find(monster))
+        monster_cell = monster_cell.split(' ')
+        monster_row = monster_cell[1]
+        monster_row = monster_row[1:]
+        cell =  weapon_column + monster_row
+        test_cell = str(wks.cell((cell)))
+
+        if test_cell[-3:] == "''>":
+            missing_log += monster + ', '
+    return missing_log
+    
 def mhw_help():
     #to do, list accepted names for a monsters
     #to do, list accepted names for a weapon
