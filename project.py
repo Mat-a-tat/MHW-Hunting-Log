@@ -47,7 +47,10 @@ current_log = []
 def main():
 
     try:
-        opening_question = "\nWelcome! Please type a command below using one of the following keywords. \nGenerate New Sheet / Modify Sheet / Log, open / Quit\nEx: 'gen','mod','log', or 'quit'\n\nTask:"
+        opening_question = '''Welcome! Please type a command below using one of the following keywords.
+        Generate New Sheet / Modify Sheet / Log, open / Quit
+        Ex: 'gen','mod','log', or 'quit'
+        Task:'''
         s = input(f"{opening_question}")
         s = s.replace(' ','')
         answer = s.lower()
@@ -164,7 +167,11 @@ def mod_sheet():
 
 def check_log():
     try:
-        s = input("\nPlease type your weapon followed by 'world' to see the log for that weapon.\n Or type your weapon of choice, followed by hunting region.\nEx: 'sns world'\nEx: 'ls tundra' \n\nLog Request:")
+        s = input('''\nPlease type your weapon followed by 'world' to see the log for that weapon. 
+        Or type your weapon of choice, followed by hunting region, elenement, or species
+        Ex: 'sns world' || 'ls tundra' 
+        Ex: 'bow fire'  || 'ig brutes'
+        Log Request:''')
         s_split = s.split(' ')
         weapon = weapon_cleaner(s_split[0])
         target_log = s_split[1]
@@ -189,8 +196,13 @@ def check_log():
             missing_log = region_log(weapon, area)
         
         #to do, share current_log between functions to show wheneever you mod a weapon
-        if missing_log == '': print(f"Log for {weapon} and {target_log} complete!")
-        else: print(f"\nMissing Log for {weapon}: {missing_log}\n")
+        if missing_log == '': 
+            print(f"Log for {weapon} and {target_log} complete!\n")
+            main()
+        if missing_log[-2:] == ', ':
+            missing_log = missing_log[:-2]
+            missing_log += '.'
+        print(f"\nMissing Log for {weapon}: {missing_log}\n")
 
         main()
 
@@ -411,10 +423,10 @@ def element_cleaner(s):
 
 def species_cleaner(s):
         species_nest = [
-        ['Bird Wyverns', 'bird','burb'],
-        ['Brute Wyverns', 'brute','brut'],
-        ['Elder Dragons','elder dragons', 'elder'],
-        ['Fanged Wyverns', 'fanged', 'fang'],
+        ['Bird Wyverns', 'birds','bird','burb'],
+        ['Brute Wyverns', 'brutes','brute','brut'],
+        ['Elder Dragons','elder dragons', 'elders','elder'],
+        ['Fanged Wyverns', 'fanged', 'fangs','fang'],
         ['Flying Wyverns', 'flying', 'fly'],
         ['Piscine Wyvern', 'piscine', 'pisc', 'fish']
         ]
